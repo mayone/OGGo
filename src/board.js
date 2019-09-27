@@ -2,19 +2,19 @@ import React from 'react';
 
 import './board.css';
 
-export const SIDE = {
+export const SIDE = Object.freeze({
     BLACK: 'black',
     WHITE: 'white',
     EMPTY: 'orange'
-}
+})
 
 export class Board extends React.Component {
     constructor(props) {
         super(props)
         this.boardSize = props.boardSize
-        this.moveNumber = 0
+        this.numMoves = 0
         this.state = {
-            showMoveNum: props.showMoveNum,
+            showMoveNo: props.showMoveNo,
             intersections: [...Array(this.boardSize * this.boardSize).fill({
                 color: SIDE.EMPTY,
                 moveNo: null
@@ -23,10 +23,17 @@ export class Board extends React.Component {
         }
     }
 
-    static toggleShowMoveNum = () => {
+    updateShowMoveNo = () => {
         this.setState({
-            showMoveNum: this.state.showMoveNum ? false : true
+            showMoveNo: this.props.showMoveNo
         })
+    }
+
+    componentDidUpdate(perv) {
+        console.log("receive new props")
+        if (perv.showMoveNo !== this.props.showMoveNo) {
+            this.updateShowMoveNo()
+        }
     }
 
     xCoordinate() {
@@ -37,19 +44,32 @@ export class Board extends React.Component {
     playAt = (y, x) => {
         let pos = y * this.boardSize + x
         if (!this.state.intersections[pos].moveNo) {
-            this.moveNumber++
-            let newIntersections = this.state.intersections.slice()
+            this.numMoves++
+            let newIntersections = [...this.state.intersections]
             let currentColor = this.state.currentColor
-            let moveNumber = this.moveNumber
+            let numMoves = this.numMoves
             newIntersections[pos] = {
                 color: currentColor,
-                moveNo: moveNumber
+                moveNo: numMoves
             }
             this.setState({
                 intersections: newIntersections,
                 currentColor: this.nextColor(),
             })
         }
+    }
+
+    getNeighbor = (y, x) => {
+        let top = y > 0 ? this.intersections[(y - 1) * this.boardSize + x] : null
+        let bottom = y < this.boardSize - 1 ? this.intersections[(y + 1) * this.boardSize + x] : null
+        let left = x > 0 ? this.intersections[y * this.boardSize + (x - 1)] : null
+        let right = x < this.boardSize - 1 ? this.intersections[y * this.boardSize + (x + 1)] : null
+        return ({
+            top: top,
+            bottom: bottom,
+            left: left,
+            right: right
+        })
     }
 
     nextColor() {
@@ -62,7 +82,7 @@ export class Board extends React.Component {
 
     Intersection = (props) => {
         const { onClick, color, moveNo } = props
-        let moveNumber = this.state.showMoveNum ? moveNo : null
+        let moveNumber = this.state.showMoveNo ? moveNo : null
 
         return (
             <button

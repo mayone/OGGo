@@ -12,24 +12,18 @@ export default class Game extends React.Component {
         this.currentPlayer = SIDE.BLACK
         this.result = null
         this.state = {
-            showMoveNum: true
+            showMoveNo: true
         }
-        // this.board = new Board({
-        //     boardSize: this.boardSize,
-        //     currentSide: this.currentPlayer,
-        //     showMoveNum: this.state.showMoveNum
-        // })
     }
 
     pass() {
         //Board.nextColor()
     }
 
-    showMoveNumToggle = () => {
+    ToggleShowMoveNo = () => {
         this.setState({
-            showMoveNum: this.state.showMoveNum ? false : true
+            showMoveNo: this.state.showMoveNo ? false : true
         })
-        console.log(this.state.showMoveNum)
     }
 
     render() {
@@ -38,10 +32,10 @@ export default class Game extends React.Component {
                 <Board
                     boardSize={this.boardSize}
                     currentSide={this.currentPlayer}
-                    showMoveNum={this.state.showMoveNum}
+                    showMoveNo={this.state.showMoveNo}
                 />
                 <button
-                // onClick={() => { this.board.toggleShowMoveNum() }}
+                    onClick={this.ToggleShowMoveNo}
                 >
                     Move Number Toggle
                 </button>

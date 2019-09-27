@@ -1,6 +1,6 @@
 import React from 'react';
 // import logo from './logo.svg';
-import Game from './game'
+import Game from './game';
 
 import './App.css';
 
