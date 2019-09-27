@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Game from './game'
 
 import './App.css';
@@ -11,7 +11,6 @@ function App() {
                 <p>
                     <code>oggo</code>
                 </p>
-                <img src={logo} className="App-logo" alt="logo" />
                 <div>
                     <Game />
                 </div>

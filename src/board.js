@@ -1,15 +1,32 @@
 import React from 'react';
 
-export default class Board extends React.Component {
+import './board.css';
+
+export const SIDE = {
+    BLACK: 'black',
+    WHITE: 'white',
+    EMPTY: 'orange'
+}
+
+export class Board extends React.Component {
     constructor(props) {
         super(props)
         this.boardSize = props.boardSize
+        this.moveNumber = 0
         this.state = {
-            intersections: [...Array(this.boardSize * this.boardSize).fill(null)],
-            currentColor: props.currentColor,
-            moveNumber: 0
+            showMoveNum: props.showMoveNum,
+            intersections: [...Array(this.boardSize * this.boardSize).fill({
+                color: SIDE.EMPTY,
+                moveNo: null
+            })],
+            currentColor: props.currentSide
         }
-        //this.Row = this.Row.bind(this)
+    }
+
+    static toggleShowMoveNum = () => {
+        this.setState({
+            showMoveNum: this.state.showMoveNum ? false : true
+        })
     }
 
     xCoordinate() {
@@ -19,43 +36,40 @@ export default class Board extends React.Component {
 
     playAt = (y, x) => {
         let pos = y * this.boardSize + x
-        if (!this.state.intersections[pos]) {
+        if (!this.state.intersections[pos].moveNo) {
+            this.moveNumber++
             let newIntersections = this.state.intersections.slice()
-            newIntersections[pos] = this.state.currentColor
+            let currentColor = this.state.currentColor
+            let moveNumber = this.moveNumber
+            newIntersections[pos] = {
+                color: currentColor,
+                moveNo: moveNumber
+            }
             this.setState({
                 intersections: newIntersections,
                 currentColor: this.nextColor(),
-                moveNumber: this.state.moveNumber + 1
             })
         }
-        console.log(this.state.intersections)
     }
 
     nextColor() {
-        if (this.state.currentColor === "black") {
-            return "white";
+        if (this.state.currentColor === SIDE.BLACK) {
+            return SIDE.WHITE
         } else {
-            return "black"
+            return SIDE.BLACK
         }
     }
 
-    Intersection(props) {
-        const { onClick, color } = props
-
-        let value = null
-        if (color === "black") {
-            value = "X"
-        } else if (color === "white") {
-            value = "O"
-        } else {
-            value = ""
-        }
+    Intersection = (props) => {
+        const { onClick, color, moveNo } = props
+        let moveNumber = this.state.showMoveNum ? moveNo : null
 
         return (
             <button
+                className={`chess ${color}`}
                 onClick={onClick}
             >
-                {value}
+                {moveNumber}
             </button>
         )
     }
@@ -67,7 +81,8 @@ export default class Board extends React.Component {
             <this.Intersection
                 key={`${rowId}-${colId}`}
                 onClick={() => this.playAt(rowId, colId)}
-                color={this.state.intersections[rowId * this.boardSize + colId]}
+                color={this.state.intersections[rowId * this.boardSize + colId].color}
+                moveNo={this.state.intersections[rowId * this.boardSize + colId].moveNo}
             />)
 
         return row
@@ -77,7 +92,7 @@ export default class Board extends React.Component {
         let rows = []
         for (let rowId = 0; rowId < this.boardSize; rowId++) {
             rows.push(
-                <div key={rowId}>
+                <div className="row" key={rowId}>
                     <this.Row rowId={rowId} />
                 </div>
             )
