@@ -1,5 +1,7 @@
 import React from 'react';
-import { Board, SIDE } from "./board"
+import { Board, SIDE } from "./board";
+
+import './game.css';
 
 export default class Game extends React.Component {
     constructor(props) {
@@ -9,10 +11,10 @@ export default class Game extends React.Component {
             black: null,
             white: null
         }
-        this.currentPlayer = SIDE.BLACK
         this.result = null
         this.state = {
-            showMoveNo: true
+            currentPlayer: SIDE.BLACK,
+            moveNumberDisplay: false
         }
     }
 
@@ -20,10 +22,14 @@ export default class Game extends React.Component {
         //Board.nextColor()
     }
 
-    ToggleShowMoveNo = () => {
+    toggleMoveNumberDisplay = () => {
         this.setState({
-            showMoveNo: this.state.showMoveNo ? false : true
+            moveNumberDisplay: !this.state.moveNumberDisplay
         })
+    }
+
+    ClearBoard = () => {
+
     }
 
     render() {
@@ -31,13 +37,19 @@ export default class Game extends React.Component {
             <div>
                 <Board
                     boardSize={this.boardSize}
-                    currentSide={this.currentPlayer}
-                    showMoveNo={this.state.showMoveNo}
+                    currentSide={this.state.currentPlayer}
+                    moveNumberDisplay={this.state.moveNumberDisplay}
                 />
                 <button
-                    onClick={this.ToggleShowMoveNo}
+                    className="button"
+                    onClick={this.toggleMoveNumberDisplay}
                 >
-                    Move Number Toggle
+                    Move #
+                </button>
+                <button
+                    onClick={this.toggleMoveNumberDisplay}
+                >
+                    Clear Board
                 </button>
             </div>
         )

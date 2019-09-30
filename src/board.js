@@ -11,11 +11,11 @@ export const SIDE = Object.freeze({
 export class Board extends React.Component {
     constructor(props) {
         super(props)
-        this.boardSize = props.boardSize
-        this.numMoves = 0
         this.state = {
-            showMoveNo: props.showMoveNo,
-            intersections: [...Array(this.boardSize * this.boardSize).fill({
+            boardSize: props.boardSize,
+            moveNumberDisplay: props.moveNumberDisplay,
+            totalMoves: 0,
+            intersections: [...Array(props.boardSize * props.boardSize).fill({
                 color: SIDE.EMPTY,
                 moveNo: null
             })],
@@ -23,47 +23,68 @@ export class Board extends React.Component {
         }
     }
 
-    updateShowMoveNo = () => {
+    clearBoard = (props) => {
         this.setState({
-            showMoveNo: this.props.showMoveNo
+            totalMoves: 0,
+            intersections: [...Array(this.state.boardSize * this.state.boardSize).fill({
+                color: SIDE.EMPTY,
+                moveNo: null
+            })],
+            currentColor: props.currentSide
         })
     }
 
-    componentDidUpdate(perv) {
-        console.log("receive new props")
-        if (perv.showMoveNo !== this.props.showMoveNo) {
-            this.updateShowMoveNo()
+    moveNumberDisplayChange = (moveNumberDisplay) => {
+        this.setState({
+            moveNumberDisplay: moveNumberDisplay
+        })
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.moveNumberDisplay !== prevProps.moveNumberDisplay) {
+            this.moveNumberDisplayChange(this.props.moveNumberDisplay)
+        }
+        if (this.props.clearBoard) {
+            this.clearBoard(this.props)
         }
     }
 
     xCoordinate() {
-        const letters = [...Array(this.boardSize)].map((_, i) => String.fromCharCode(i + 65))
+        const letters = [...Array(this.state.boardSize)].map((_, i) => String.fromCharCode(i + 65))
         return letters
     }
 
     playAt = (y, x) => {
-        let pos = y * this.boardSize + x
+        let pos = y * this.state.boardSize + x
         if (!this.state.intersections[pos].moveNo) {
-            this.numMoves++
             let newIntersections = [...this.state.intersections]
             let currentColor = this.state.currentColor
-            let numMoves = this.numMoves
+            let totalMoves = this.state.totalMoves + 1
             newIntersections[pos] = {
                 color: currentColor,
-                moveNo: numMoves
+                moveNo: totalMoves
             }
             this.setState({
+                totalMoves: totalMoves,
                 intersections: newIntersections,
                 currentColor: this.nextColor(),
             })
+            // this.setState((state, prevProps) => {
+            //     console.log(state)
+            //     console.log(prevProps)
+            //     return {
+            //         intersections: newIntersections,
+            //         currentColor: this.nextColor()
+            //     }
+            // })
         }
     }
 
     getNeighbor = (y, x) => {
-        let top = y > 0 ? this.intersections[(y - 1) * this.boardSize + x] : null
-        let bottom = y < this.boardSize - 1 ? this.intersections[(y + 1) * this.boardSize + x] : null
+        let top = y > 0 ? this.intersections[(y - 1) * this.state.boardSize + x] : null
+        let bottom = y < this.state.boardSize - 1 ? this.intersections[(y + 1) * this.state.boardSize + x] : null
         let left = x > 0 ? this.intersections[y * this.boardSize + (x - 1)] : null
-        let right = x < this.boardSize - 1 ? this.intersections[y * this.boardSize + (x + 1)] : null
+        let right = x < this.state.boardSize - 1 ? this.intersections[y * this.state.boardSize + (x + 1)] : null
         return ({
             top: top,
             bottom: bottom,
@@ -82,7 +103,7 @@ export class Board extends React.Component {
 
     Intersection = (props) => {
         const { onClick, color, moveNo } = props
-        let moveNumber = this.state.showMoveNo ? moveNo : null
+        let moveNumber = this.state.moveNumberDisplay ? moveNo : null
 
         return (
             <button
@@ -97,12 +118,12 @@ export class Board extends React.Component {
     Row = (props) => {
         const { rowId } = props
 
-        let row = [...Array(this.boardSize)].map((_, colId) =>
+        let row = [...Array(this.state.boardSize)].map((_, colId) =>
             <this.Intersection
                 key={`${rowId}-${colId}`}
                 onClick={() => this.playAt(rowId, colId)}
-                color={this.state.intersections[rowId * this.boardSize + colId].color}
-                moveNo={this.state.intersections[rowId * this.boardSize + colId].moveNo}
+                color={this.state.intersections[rowId * this.state.boardSize + colId].color}
+                moveNo={this.state.intersections[rowId * this.state.boardSize + colId].moveNo}
             />)
 
         return row
@@ -110,7 +131,7 @@ export class Board extends React.Component {
 
     render() {
         let rows = []
-        for (let rowId = 0; rowId < this.boardSize; rowId++) {
+        for (let rowId = 0; rowId < this.state.boardSize; rowId++) {
             rows.push(
                 <div className="row" key={rowId}>
                     <this.Row rowId={rowId} />
