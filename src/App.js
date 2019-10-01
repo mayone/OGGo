@@ -1,5 +1,7 @@
 import React from 'react';
 // import logo from './logo.svg';
+//import octocat from '/Octocat.png'
+import { LINK } from './type';
 import Game from './game';
 
 import './App.css';
@@ -16,7 +18,7 @@ function App() {
                 </div>
                 <a
                     className="App-link"
-                    href="https://github.com/mayone/oggo"
+                    href={LINK.githubURL}
                     target="_blank"
                     rel="noopener noreferrer"
                 >

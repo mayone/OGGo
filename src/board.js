@@ -44,7 +44,8 @@ export class Board extends React.Component {
         if (this.props.moveNumberDisplay !== prevProps.moveNumberDisplay) {
             this.moveNumberDisplayChange(this.props.moveNumberDisplay)
         }
-        if (this.props.clearBoard) {
+        if (this.props.clearBoard &&
+            this.props.clearBoard !== prevProps.clearBoard) {
             this.clearBoard(this.props)
         }
     }
