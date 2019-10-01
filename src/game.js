@@ -14,7 +14,8 @@ export default class Game extends React.Component {
         this.result = null
         this.state = {
             currentPlayer: SIDE.BLACK,
-            moveNumberDisplay: false
+            moveNumberDisplay: true,
+            clearBoard: false
         }
     }
 
@@ -28,8 +29,17 @@ export default class Game extends React.Component {
         })
     }
 
-    ClearBoard = () => {
-
+    clearBoard = () => {
+        this.setState(
+            {
+                clearBoard: true
+            },
+            () => {
+                this.setState({
+                    clearBoard: false
+                })
+            }
+        )
     }
 
     render() {
@@ -39,17 +49,19 @@ export default class Game extends React.Component {
                     boardSize={this.boardSize}
                     currentSide={this.state.currentPlayer}
                     moveNumberDisplay={this.state.moveNumberDisplay}
+                    clearBoard={this.state.clearBoard}
                 />
                 <button
-                    className="button"
+                    className={this.state.moveNumberDisplay ? "toggle on" : "toggle off"}
                     onClick={this.toggleMoveNumberDisplay}
                 >
                     Move #
                 </button>
                 <button
-                    onClick={this.toggleMoveNumberDisplay}
+                    className="clear"
+                    onClick={this.clearBoard}
                 >
-                    Clear Board
+                    Clear
                 </button>
             </div>
         )
