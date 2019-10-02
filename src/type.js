@@ -2,6 +2,10 @@ export const LINK = Object.freeze({
     githubURL: 'https://github.com/mayone/oggo'
 })
 
+export const IMAGE = Object.freeze({
+    GITHUB: '/GitHub-Mark-Light-64px.png'
+})
+
 export const GAME_TYPE = Object.freeze({
     GO: 'go',
     GOMOKU: 'gomoku'
