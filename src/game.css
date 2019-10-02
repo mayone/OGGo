@@ -6,9 +6,21 @@
     width: 4rem;
     background: transparent;
     background-color: palevioletred;
+    font-weight: bold;
     color: white;
     border: 2px solid white;
 }
+
+.toggle {
+    transition: all 0.3s ease-out;
+}
+
+.toggle:hover {
+    color: yellow;
+    border-color: yellow;
+    transform: translateY(-5px);
+}
+
 .on {
     background-color: orchid;
 }
@@ -25,6 +37,44 @@
     width: 4rem;
     background: transparent;
     background-color: red;
+    font-weight: bold;
     color: white;
     border: 2px solid white;
+}
+.clear:hover {
+    animation: bounce 1s;
+}
+
+@keyframes bounce {
+    0%, 20%, 60%, 100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
+    }
+
+    80% {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes squeeze {
+    0%, 20%, 60%, 100% {
+        -webkit-transform: skew(0);
+        transform: skew(0);
+    }
+
+    40% {
+        -webkit-transform: skew(-10deg);
+        transform: skew(-10deg);
+    }
+
+    80% {
+        -webkit-transform: skew(10deg);
+        transform: skew(10deg);
+    }
 }

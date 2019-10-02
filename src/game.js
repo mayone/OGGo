@@ -1,6 +1,6 @@
 import React from 'react';
 import { Board } from './board';
-import { GAME_TYPE, SIDE } from './type';
+import { GAME_TYPE, SIDE, BOARD_SIZE } from './type';
 
 import './game.css';
 
@@ -14,7 +14,7 @@ export default class Game extends React.Component {
         this.result = null
         this.state = {
             gameType: GAME_TYPE.GOMOKU,
-            boardSize: 15,
+            boardSize: BOARD_SIZE.BY15,
             currentPlayer: SIDE.BLACK,
             moveNumberDisplay: true,
             clearBoard: false
@@ -30,19 +30,28 @@ export default class Game extends React.Component {
             return
         }
 
-        let boardSize = 9
+        let boardSize = BOARD_SIZE.BY9
         if (gameType === GAME_TYPE.GOMOKU) {
-            boardSize = 15
+            boardSize = BOARD_SIZE.BY15
         }
+
         this.setState({
             gameType: gameType,
             boardSize: boardSize
         })
     }
 
-    toggleMoveNumberDisplay = () => {
+    setBoardSize = (boardSize) => {
         this.setState({
-            moveNumberDisplay: !this.state.moveNumberDisplay
+            boardSize: boardSize
+        })
+    }
+
+    toggleMoveNumberDisplay = () => {
+        this.setState((prevState) => {
+            return {
+                moveNumberDisplay: !prevState.moveNumberDisplay
+            }
         })
     }
 
@@ -56,6 +65,34 @@ export default class Game extends React.Component {
                     clearBoard: false
                 })
             }
+        )
+    }
+
+    BoardSizeSelect = () => {
+        if (this.state.gameType !== GAME_TYPE.GO) {
+            return null
+        }
+        return (
+            <div>
+                <button
+                    className={this.state.boardSize === BOARD_SIZE.BY9 ? "toggle on" : "toggle off"}
+                    onClick={() => this.setBoardSize(BOARD_SIZE.BY9)}
+                >
+                    9x9
+                </button>
+                <button
+                    className={this.state.boardSize === BOARD_SIZE.BY13 ? "toggle on" : "toggle off"}
+                    onClick={() => this.setBoardSize(BOARD_SIZE.BY13)}
+                >
+                    13x13
+                </button>
+                <button
+                    className={this.state.boardSize === BOARD_SIZE.BY19 ? "toggle on" : "toggle off"}
+                    onClick={() => this.setBoardSize(BOARD_SIZE.BY19)}
+                >
+                    19x19
+                </button>
+            </div>
         )
     }
 
@@ -74,6 +111,7 @@ export default class Game extends React.Component {
                 >
                     Gomoku
                 </button>
+                <this.BoardSizeSelect />
                 <Board
                     gameType={this.state.gameType}
                     boardSize={this.state.boardSize}

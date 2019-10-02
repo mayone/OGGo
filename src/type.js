@@ -13,6 +13,13 @@ export const SIDE = Object.freeze({
     EMPTY: 'empty'
 })
 
+export const BOARD_SIZE = Object.freeze({
+    BY9: 9,
+    BY13: 13,
+    BY15: 15,
+    BY19: 19
+})
+
 export const DIRECTION = Object.freeze({
     TOP: 'top',
     BOTTOM: 'bottom',

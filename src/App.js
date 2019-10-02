@@ -1,6 +1,5 @@
 import React from 'react';
 // import logo from './logo.svg';
-//import octocat from '/Octocat.png'
 import { LINK } from './type';
 import Game from './game';
 
@@ -10,6 +9,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
+                {/* <img src='/Octocat.png' /> */}
                 <p>
                     <code>oggo</code>
                 </p>

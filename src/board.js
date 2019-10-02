@@ -1,7 +1,7 @@
 import React from 'react';
 import { GAME_TYPE, SIDE, DIRECTION } from './type'
 
-import './board.css';
+import './board.scss';
 
 export class Board extends React.Component {
     constructor(props) {
@@ -22,6 +22,7 @@ export class Board extends React.Component {
 
     clearBoard = (props) => {
         this.setState({
+            gameType: props.gameType,
             boardSize: props.boardSize,
             intersections: [...Array(props.boardSize * props.boardSize).fill({
                 color: SIDE.EMPTY,
@@ -40,7 +41,8 @@ export class Board extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.gameType !== prevProps.gameType) {
+        if (this.props.gameType !== prevProps.gameType ||
+            this.props.boardSize !== prevProps.boardSize) {
             this.clearBoard(this.props)
         }
         if (this.props.moveNumberDisplay !== prevProps.moveNumberDisplay) {
@@ -154,6 +156,10 @@ export class Board extends React.Component {
         let neighbors = this.getNeighbors(y, x)
         let len = 1
 
+        if (this.state.gameType !== GAME_TYPE.GOMOKU) {
+            return null
+        }
+
         if (!self.moveNo) {
             return null
         }
@@ -203,7 +209,7 @@ export class Board extends React.Component {
 
         return (
             <button
-                className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : null}`}
+                className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : ""}`}
                 onClick={onClick}
             >
                 {moveNumber}
