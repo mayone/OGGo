@@ -9,13 +9,12 @@
     color: white;
     border: 2px solid white;
 }
-
 .on {
-    background-color: palevioletred;
+    background-color: orchid;
 }
-
 .off {
     background-color: grey;
+    border: 2px solid grey;
 }
 
 .clear {

@@ -1,17 +1,13 @@
 import React from 'react';
+import { GAME_TYPE, SIDE, DIRECTION } from './type'
 
 import './board.css';
-
-export const SIDE = Object.freeze({
-    BLACK: 'black',
-    WHITE: 'white',
-    EMPTY: 'orange'
-})
 
 export class Board extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            gameType: props.gameType,
             boardSize: props.boardSize,
             moveNumberDisplay: props.moveNumberDisplay,
             totalMoves: 0,
@@ -19,18 +15,21 @@ export class Board extends React.Component {
                 color: SIDE.EMPTY,
                 moveNo: null
             })],
-            currentColor: props.currentSide
+            currentColor: props.currentSide,
+            gameEnded: false
         }
     }
 
     clearBoard = (props) => {
         this.setState({
-            totalMoves: 0,
-            intersections: [...Array(this.state.boardSize * this.state.boardSize).fill({
+            boardSize: props.boardSize,
+            intersections: [...Array(props.boardSize * props.boardSize).fill({
                 color: SIDE.EMPTY,
                 moveNo: null
             })],
-            currentColor: props.currentSide
+            totalMoves: 0,
+            currentColor: props.currentSide,
+            gameEnded: false
         })
     }
 
@@ -41,6 +40,9 @@ export class Board extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (this.props.gameType !== prevProps.gameType) {
+            this.clearBoard(this.props)
+        }
         if (this.props.moveNumberDisplay !== prevProps.moveNumberDisplay) {
             this.moveNumberDisplayChange(this.props.moveNumberDisplay)
         }
@@ -55,20 +57,33 @@ export class Board extends React.Component {
         return letters
     }
 
+    getIndex = (y, x) => {
+        return y * this.state.boardSize + x
+    }
+
     playAt = (y, x) => {
-        let pos = y * this.state.boardSize + x
-        if (!this.state.intersections[pos].moveNo) {
+        let index = this.getIndex(y, x)
+        if (!this.state.gameEnded &&
+            !this.state.intersections[index].moveNo) {
             let newIntersections = [...this.state.intersections]
             let currentColor = this.state.currentColor
             let totalMoves = this.state.totalMoves + 1
-            newIntersections[pos] = {
+            newIntersections[index] = {
                 color: currentColor,
                 moveNo: totalMoves
             }
             this.setState({
                 totalMoves: totalMoves,
                 intersections: newIntersections,
-                currentColor: this.nextColor(),
+                currentColor: this.nextColor()
+            }, () => {
+                let winningColor = this.gomokuCheckWinner(y, x)
+                if (winningColor) {
+                    console.log(`${winningColor} wins`)
+                    this.setState({
+                        gameEnded: true
+                    })
+                }
             })
             // this.setState((state, prevProps) => {
             //     console.log(state)
@@ -78,20 +93,108 @@ export class Board extends React.Component {
             //         currentColor: this.nextColor()
             //     }
             // })
+
+            // this.setState({
+            //     currentColor: this.nextColor()
+            // })
         }
     }
 
-    getNeighbor = (y, x) => {
-        let top = y > 0 ? this.intersections[(y - 1) * this.state.boardSize + x] : null
-        let bottom = y < this.state.boardSize - 1 ? this.intersections[(y + 1) * this.state.boardSize + x] : null
-        let left = x > 0 ? this.intersections[y * this.boardSize + (x - 1)] : null
-        let right = x < this.state.boardSize - 1 ? this.intersections[y * this.state.boardSize + (x + 1)] : null
-        return ({
-            top: top,
-            bottom: bottom,
-            left: left,
-            right: right
-        })
+    getNeighbors = (y, x) => {
+        let top = y > 0 ?
+            [y - 1, x] :
+            null
+        let bottom = y < this.state.boardSize - 1 ?
+            [y + 1, x] :
+            null
+        let left = x > 0 ?
+            [y, x - 1] :
+            null
+        let right = x < this.state.boardSize - 1 ?
+            [y, x + 1] :
+            null
+        let topLeft = top && left ?
+            [y - 1, x - 1] :
+            null
+        let topRight = top && right ?
+            [y - 1, x + 1] :
+            null
+        let bottomLeft = bottom && left ?
+            [y + 1, x - 1] :
+            null
+        let bottomRight = bottom && right ?
+            [y + 1, x + 1] :
+            null
+        if (this.state.gameType === GAME_TYPE.GOMOKU) {
+            return ({
+                top: top,
+                bottom: bottom,
+                left: left,
+                right: right,
+                topLeft: topLeft,
+                topRight: topRight,
+                bottomLeft: bottomLeft,
+                bottomRight: bottomRight
+            })
+        } else {
+            return ({
+                top: top,
+                bottom: bottom,
+                left: left,
+                right: right
+            })
+        }
+    }
+
+    countSameColor = (baseColor, base, direction) => {
+        let len = 0
+        let current = base
+        while (current && (this.state.intersections[this.getIndex(current[0], current[1])].color === baseColor)) {
+            current = this.getNeighbors(current[0], current[1])[direction]
+            len++
+        }
+
+        return len
+    }
+
+    gomokuCheckWinner = (y, x) => {
+        let self = this.state.intersections[this.getIndex(y, x)]
+        let neighbors = this.getNeighbors(y, x)
+        let len = 1
+
+        if (!self.moveNo) {
+            return null
+        }
+
+        // Check vertical
+        len += this.countSameColor(self.color, neighbors[DIRECTION.TOP], DIRECTION.TOP)
+        len += this.countSameColor(self.color, neighbors[DIRECTION.BOTTOM], DIRECTION.BOTTOM)
+        if (len >= 5) {
+            return self.color
+        }
+        // Check horizontal
+        len = 1
+        len += this.countSameColor(self.color, neighbors[DIRECTION.LEFT], DIRECTION.LEFT)
+        len += this.countSameColor(self.color, neighbors[DIRECTION.RIGHT], DIRECTION.RIGHT)
+        if (len >= 5) {
+            return self.color
+        }
+        // Check slash
+        len = 1
+        len += this.countSameColor(self.color, neighbors[DIRECTION.TOP_RIGHT], DIRECTION.TOP_RIGHT)
+        len += this.countSameColor(self.color, neighbors[DIRECTION.BOTTOM_LEFT], DIRECTION.BOTTOM_LEFT)
+        if (len >= 5) {
+            return self.color
+        }
+        // Check backslash
+        len = 1
+        len += this.countSameColor(self.color, neighbors[DIRECTION.TOP_LEFT], DIRECTION.TOP_LEFT)
+        len += this.countSameColor(self.color, neighbors[DIRECTION.BOTTOM_RIGHT], DIRECTION.BOTTOM_RIGHT)
+        if (len >= 5) {
+            return self.color
+        }
+
+        return null
     }
 
     nextColor() {
@@ -123,8 +226,8 @@ export class Board extends React.Component {
             <this.Intersection
                 key={`${rowId}-${colId}`}
                 onClick={() => this.playAt(rowId, colId)}
-                color={this.state.intersections[rowId * this.state.boardSize + colId].color}
-                moveNo={this.state.intersections[rowId * this.state.boardSize + colId].moveNo}
+                color={this.state.intersections[this.getIndex(rowId, colId)].color}
+                moveNo={this.state.intersections[this.getIndex(rowId, colId)].moveNo}
             />)
 
         return row

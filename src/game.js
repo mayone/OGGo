@@ -1,18 +1,20 @@
 import React from 'react';
-import { Board, SIDE } from "./board";
+import { Board } from './board';
+import { GAME_TYPE, SIDE } from './type';
 
 import './game.css';
 
 export default class Game extends React.Component {
     constructor(props) {
         super(props)
-        this.boardSize = 9
         this.sides = {
             black: null,
             white: null
         }
         this.result = null
         this.state = {
+            gameType: GAME_TYPE.GOMOKU,
+            boardSize: 15,
             currentPlayer: SIDE.BLACK,
             moveNumberDisplay: true,
             clearBoard: false
@@ -21,6 +23,21 @@ export default class Game extends React.Component {
 
     pass() {
         //Board.nextColor()
+    }
+
+    switchGameType = (gameType) => {
+        if (gameType === this.state.gameType) {
+            return
+        }
+
+        let boardSize = 9
+        if (gameType === GAME_TYPE.GOMOKU) {
+            boardSize = 15
+        }
+        this.setState({
+            gameType: gameType,
+            boardSize: boardSize
+        })
     }
 
     toggleMoveNumberDisplay = () => {
@@ -45,8 +62,21 @@ export default class Game extends React.Component {
     render() {
         return (
             <div>
+                <button
+                    className={this.state.gameType === GAME_TYPE.GO ? "toggle on" : "toggle off"}
+                    onClick={() => this.switchGameType(GAME_TYPE.GO)}
+                >
+                    Go
+                </button>
+                <button
+                    className={this.state.gameType === GAME_TYPE.GOMOKU ? "toggle on" : "toggle off"}
+                    onClick={() => this.switchGameType(GAME_TYPE.GOMOKU)}
+                >
+                    Gomoku
+                </button>
                 <Board
-                    boardSize={this.boardSize}
+                    gameType={this.state.gameType}
+                    boardSize={this.state.boardSize}
                     currentSide={this.state.currentPlayer}
                     moveNumberDisplay={this.state.moveNumberDisplay}
                     clearBoard={this.state.clearBoard}
