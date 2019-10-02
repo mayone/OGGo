@@ -2,7 +2,7 @@ import React from 'react';
 import { Board } from './board';
 import { GAME_TYPE, SIDE, BOARD_SIZE } from './type';
 
-import './game.css';
+import './game.scss';
 
 export default class Game extends React.Component {
     constructor(props) {
