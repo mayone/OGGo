@@ -102,29 +102,21 @@ export class Board extends React.Component {
 
     getNeighbors = (y, x) => {
         let top = y > 0 ?
-            [y - 1, x] :
-            null
+            [y - 1, x] : null
         let bottom = y < this.state.boardSize - 1 ?
-            [y + 1, x] :
-            null
+            [y + 1, x] : null
         let left = x > 0 ?
-            [y, x - 1] :
-            null
+            [y, x - 1] : null
         let right = x < this.state.boardSize - 1 ?
-            [y, x + 1] :
-            null
+            [y, x + 1] : null
         let topLeft = top && left ?
-            [y - 1, x - 1] :
-            null
+            [y - 1, x - 1] : null
         let topRight = top && right ?
-            [y - 1, x + 1] :
-            null
+            [y - 1, x + 1] : null
         let bottomLeft = bottom && left ?
-            [y + 1, x - 1] :
-            null
+            [y + 1, x - 1] : null
         let bottomRight = bottom && right ?
-            [y + 1, x + 1] :
-            null
+            [y + 1, x + 1] : null
         if (this.state.gameType === GAME_TYPE.GOMOKU) {
             return ({
                 top: top,
@@ -211,7 +203,7 @@ export class Board extends React.Component {
 
         return (
             <button
-                className={`chess ${color}`}
+                className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : null}`}
                 onClick={onClick}
             >
                 {moveNumber}

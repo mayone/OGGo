@@ -10,7 +10,7 @@ export const GAME_TYPE = Object.freeze({
 export const SIDE = Object.freeze({
     BLACK: 'black',
     WHITE: 'white',
-    EMPTY: 'orange'
+    EMPTY: 'empty'
 })
 
 export const DIRECTION = Object.freeze({
