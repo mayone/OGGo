@@ -1,6 +1,7 @@
 import React from 'react';
 import { Board } from './board';
 import { GAME_TYPE, BOARD_SIZE, MODE, SIDE } from './type';
+import GameResultModal from './modal/gameResultModal'
 
 import './game.scss';
 
@@ -11,14 +12,15 @@ export default class Game extends React.Component {
             black: null,
             white: null
         }
-        this.result = null
+        this.gameResult = null
         this.state = {
             gameType: GAME_TYPE.GOMOKU,
             boardSize: BOARD_SIZE.BY15,
             mode: MODE.PVP,
             currentPlayer: SIDE.BLACK,
             moveNumberDisplay: false,
-            clearBoard: false
+            clearBoard: false,
+            gameResultModelDisplay: false
         }
     }
 
@@ -54,6 +56,20 @@ export default class Game extends React.Component {
                 moveNumberDisplay: !prevState.moveNumberDisplay
             }
         })
+    }
+
+    toggleGameResultModelDisplay = (gameResult) => {
+        this.setState((prevState) => {
+            return {
+                gameResult: gameResult,
+                gameResultModelDisplay: !prevState.gameResultModelDisplay
+            }
+        })
+    }
+
+    closeGameResultModelAndClear = () => {
+        this.toggleGameResultModelDisplay()
+        this.clearBoard()
     }
 
     clearBoard = () => {
@@ -119,6 +135,13 @@ export default class Game extends React.Component {
                     currentSide={this.state.currentPlayer}
                     moveNumberDisplay={this.state.moveNumberDisplay}
                     clearBoard={this.state.clearBoard}
+                    endGameCallback={this.toggleGameResultModelDisplay}
+                />
+                <GameResultModal
+                    open={this.state.gameResultModelDisplay}
+                    gameResult={this.state.gameResult}
+                    onConfirm={this.toggleGameResultModelDisplay}
+                    onClear={this.closeGameResultModelAndClear}
                 />
                 <button
                     className={this.state.moveNumberDisplay ? "toggle on" : "toggle off"}

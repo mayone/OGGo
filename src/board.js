@@ -19,6 +19,7 @@ export class Board extends React.Component {
             currentColor: props.currentSide,
             gameEnded: false
         }
+        this.endGameCallback = props.endGameCallback
     }
 
     clearBoard = (props) => {
@@ -84,10 +85,10 @@ export class Board extends React.Component {
             }, () => {
                 let winningColor = this.gomokuCheckWinner(y, x)
                 if (winningColor) {
-                    console.log(`${winningColor} wins`)
                     this.setState({
                         gameEnded: true
                     })
+                    this.endGameCallback(winningColor)
                 }
             })
             // this.setState((state, prevProps) => {
