@@ -70,39 +70,43 @@ export class Board extends React.Component {
         let index = this.getIndex(y, x)
         if (!this.state.gameEnded &&
             !this.state.intersections[index].moveNo) {
-            let newIntersections = [...this.state.intersections]
-            let currentColor = this.state.currentColor
-            let totalMoves = this.state.totalMoves + 1
-            newIntersections[index] = {
-                color: currentColor,
-                moveNo: totalMoves
-            }
-            this.setState({
-                totalMoves: totalMoves,
-                lastMove: [y, x],
-                intersections: newIntersections,
-                currentColor: this.nextColor()
-            }, () => {
-                let winningColor = this.gomokuCheckWinner(y, x)
-                if (winningColor) {
-                    this.setState({
-                        gameEnded: true
-                    })
-                    this.endGameCallback(winningColor)
+            if (this.state.gameType === GAME_TYPE.GOMOKU) {
+                let newIntersections = [...this.state.intersections]
+                let currentColor = this.state.currentColor
+                let totalMoves = this.state.totalMoves + 1
+                newIntersections[index] = {
+                    color: currentColor,
+                    moveNo: totalMoves
                 }
-            })
-            // this.setState((state, prevProps) => {
-            //     console.log(state)
-            //     console.log(prevProps)
-            //     return {
-            //         intersections: newIntersections,
-            //         currentColor: this.nextColor()
-            //     }
-            // })
-
-            // this.setState({
-            //     currentColor: this.nextColor()
-            // })
+                this.setState({
+                    totalMoves: totalMoves,
+                    lastMove: [y, x],
+                    intersections: newIntersections,
+                    currentColor: this.nextColor()
+                }, () => {
+                    let winningColor = this.gomokuCheckWinner(y, x)
+                    if (winningColor) {
+                        this.setState({
+                            gameEnded: true
+                        })
+                        this.endGameCallback(winningColor)
+                    }
+                })
+            } else if (this.state.gameType === GAME_TYPE.GO) {
+                let newIntersections = this.goGetNewBoard(y, x)
+                // let currentColor = this.state.currentColor
+                let totalMoves = this.state.totalMoves + 1
+                if (newIntersections) {
+                    this.setState({
+                        totalMoves: totalMoves,
+                        lastMove: [y, x],
+                        intersections: newIntersections,
+                        currentColor: this.nextColor()
+                    })
+                } else {
+                    alert("Illegal move")
+                }
+            }
         }
     }
 
@@ -197,6 +201,46 @@ export class Board extends React.Component {
         }
 
         return null
+    }
+
+    goGetNewBoard = (y, x) => {
+        let newIntersections = [...this.state.intersections]
+        // Capture
+        if (this.capture(newIntersections, y, x)) {
+
+        } else {
+            if (this.checkLiberty(newIntersections, y, x)) {
+                return newIntersections
+            } else {
+                return null
+            }
+        }
+        // return null
+    }
+
+    capture = (intersections, y, x) => {
+        // let neighbors = this.getNeighbors(y, x)
+        return 0
+    }
+
+    checkLiberty = (intersections, y, x) => {
+        let liberty = 0
+        let neighbors = this.getNeighbors(y, x)
+
+        let top = neighbors['top']
+        console.log(top)
+        if (top && intersections[this.getIndex(top[0], top[1])].color === SIDE.EMPTY) {
+            liberty++
+        }
+
+        if (liberty) {
+            intersections[this.getIndex(y, x)] = {
+                color: this.state.currentColor,
+                moveNo: this.state.totalMoves + 1
+            }
+        }
+
+        return liberty
     }
 
     nextColor() {

@@ -15,7 +15,7 @@ export default function GameResultModal(props) {
             <div className="modal-content">
                 <div className="modal-header">
                     <button
-                        class="close"
+                        className="close"
                         onClick={onConfirm}
                     >
                         &times;
@@ -23,9 +23,9 @@ export default function GameResultModal(props) {
                     <h4 className="modal-title">Game result</h4>
                 </div>
                 <div className="modal-body">
-                    <text className={`${gameResult}-text`}>
+                    <div className={`${gameResult}-text`}>
                         {`${gameResult} wins`}
-                    </text>
+                    </div>
                 </div>
                 <div className="modal-footer">
                     <button

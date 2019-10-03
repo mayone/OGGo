@@ -12,8 +12,8 @@ export default class Game extends React.Component {
             black: null,
             white: null
         }
-        this.gameResult = null
         this.state = {
+            playMusic: false,
             gameType: GAME_TYPE.GOMOKU,
             boardSize: BOARD_SIZE.BY15,
             mode: MODE.PVP,
@@ -22,10 +22,31 @@ export default class Game extends React.Component {
             clearBoard: false,
             gameResultModelDisplay: false
         }
+        this.gameResult = null
+        this.audio = new Audio("/aetheras.wav")
+        this.audio.loop = true
     }
 
     pass() {
         //Board.nextColor()
+    }
+
+    togglePlayMusic = () => {
+        this.setState(
+            (prevState) => {
+                return {
+                    playMusic: !prevState.playMusic
+                }
+            },
+            () => {
+                if (this.state.playMusic) {
+                    this.audio.load()
+                    this.audio.play()
+                } else {
+                    this.audio.pause()
+                }
+            }
+        )
     }
 
     switchGameType = (gameType) => {
@@ -116,6 +137,14 @@ export default class Game extends React.Component {
     render() {
         return (
             <div>
+                <div>
+                    <button
+                        className={this.state.playMusic ? "toggle on" : "toggle off"}
+                        onClick={this.togglePlayMusic}
+                    >
+                        Music
+                    </button>
+                </div>
                 <button
                     className={this.state.gameType === GAME_TYPE.GO ? "toggle on" : "toggle off"}
                     onClick={() => this.switchGameType(GAME_TYPE.GO)}
