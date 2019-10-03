@@ -205,11 +205,16 @@ export class Board extends React.Component {
 
     goGetNewBoard = (y, x) => {
         let newIntersections = [...this.state.intersections]
+        let checkingList = []
+        newIntersections[this.getIndex(y, x)] = {
+            color: this.state.currentColor,
+            moveNo: this.state.totalMoves + 1
+        }
         // Capture
         if (this.capture(newIntersections, y, x)) {
 
         } else {
-            if (this.checkLiberty(newIntersections, y, x)) {
+            if (this.checkLiberties(newIntersections, y, x, checkingList)) {
                 return newIntersections
             } else {
                 return null
@@ -223,24 +228,58 @@ export class Board extends React.Component {
         return 0
     }
 
-    checkLiberty = (intersections, y, x) => {
-        let liberty = 0
+    checkLiberties = (intersections, y, x, checkingList) => {
+        let liberties = 0
         let neighbors = this.getNeighbors(y, x)
 
-        let top = neighbors['top']
-        console.log(top)
-        if (top && intersections[this.getIndex(top[0], top[1])].color === SIDE.EMPTY) {
-            liberty++
-        }
+        checkingList.push(`${y}-${x}`)
 
-        if (liberty) {
-            intersections[this.getIndex(y, x)] = {
-                color: this.state.currentColor,
-                moveNo: this.state.totalMoves + 1
+        let neighbor = neighbors[DIRECTION.TOP]
+        if (neighbor) {
+            if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === SIDE.EMPTY) {
+                    liberties++
+                } else if (color === this.state.currentColor) {
+                    liberties += this.checkLiberties(intersections, neighbor[0], neighbor[1], checkingList)
+                }
+            }
+        }
+        neighbor = neighbors[DIRECTION.BOTTOM]
+        if (neighbor) {
+            if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === SIDE.EMPTY) {
+                    liberties++
+                } else if (color === this.state.currentColor) {
+                    liberties += this.checkLiberties(intersections, neighbor[0], neighbor[1], checkingList)
+                }
+            }
+        }
+        neighbor = neighbors[DIRECTION.LEFT]
+        if (neighbor) {
+            if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === SIDE.EMPTY) {
+                    liberties++
+                } else if (color === this.state.currentColor) {
+                    liberties += this.checkLiberties(intersections, neighbor[0], neighbor[1], checkingList)
+                }
+            }
+        }
+        neighbor = neighbors[DIRECTION.RIGHT]
+        if (neighbor) {
+            if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === SIDE.EMPTY) {
+                    liberties++
+                } else if (color === this.state.currentColor) {
+                    liberties += this.checkLiberties(intersections, neighbor[0], neighbor[1], checkingList)
+                }
             }
         }
 
-        return liberty
+        return liberties
     }
 
     nextColor() {
