@@ -11,17 +11,23 @@ export const GAME_TYPE = Object.freeze({
     GOMOKU: 'gomoku'
 })
 
-export const SIDE = Object.freeze({
-    BLACK: 'black',
-    WHITE: 'white',
-    EMPTY: 'empty'
-})
-
 export const BOARD_SIZE = Object.freeze({
     BY9: 9,
     BY13: 13,
     BY15: 15,
     BY19: 19
+})
+
+export const MODE = Object.freeze({
+    PVP: 0,
+    VS_AI: 1,
+    REPLAY: 2
+})
+
+export const SIDE = Object.freeze({
+    BLACK: 'black',
+    WHITE: 'white',
+    EMPTY: 'empty'
 })
 
 export const DIRECTION = Object.freeze({

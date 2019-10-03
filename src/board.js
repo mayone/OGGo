@@ -11,6 +11,7 @@ export class Board extends React.Component {
             boardSize: props.boardSize,
             moveNumberDisplay: props.moveNumberDisplay,
             totalMoves: 0,
+            lastMove: null,
             intersections: [...Array(props.boardSize * props.boardSize).fill({
                 color: SIDE.EMPTY,
                 moveNo: null
@@ -29,6 +30,7 @@ export class Board extends React.Component {
                 moveNo: null
             })],
             totalMoves: 0,
+            lastMove: null,
             currentColor: props.currentSide,
             gameEnded: false
         })
@@ -76,6 +78,7 @@ export class Board extends React.Component {
             }
             this.setState({
                 totalMoves: totalMoves,
+                lastMove: [y, x],
                 intersections: newIntersections,
                 currentColor: this.nextColor()
             }, () => {
@@ -204,15 +207,24 @@ export class Board extends React.Component {
     }
 
     Intersection = (props) => {
-        const { onClick, color, moveNo } = props
-        let moveNumber = this.state.moveNumberDisplay ? moveNo : null
+        const { rowId, colId, onClick, color, moveNo } = props
+        let chessInfo = this.state.moveNumberDisplay ?
+            moveNo :
+            (this.state.lastMove &&
+                JSON.stringify(this.state.lastMove) === JSON.stringify([rowId, colId])) ?
+                <div className="mark"></div> :
+                null
+
+        if (this.state.lastMove === [rowId, colId]) {
+            console.log(rowId, colId)
+        }
 
         return (
             <button
                 className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : ""}`}
                 onClick={onClick}
             >
-                {moveNumber}
+                {chessInfo}
             </button>
         )
     }
@@ -223,6 +235,8 @@ export class Board extends React.Component {
         let row = [...Array(this.state.boardSize)].map((_, colId) =>
             <this.Intersection
                 key={`${rowId}-${colId}`}
+                rowId={rowId}
+                colId={colId}
                 onClick={() => this.playAt(rowId, colId)}
                 color={this.state.intersections[this.getIndex(rowId, colId)].color}
                 moveNo={this.state.intersections[this.getIndex(rowId, colId)].moveNo}

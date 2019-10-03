@@ -1,6 +1,6 @@
 import React from 'react';
 import { Board } from './board';
-import { GAME_TYPE, SIDE, BOARD_SIZE } from './type';
+import { GAME_TYPE, BOARD_SIZE, MODE, SIDE } from './type';
 
 import './game.scss';
 
@@ -15,8 +15,9 @@ export default class Game extends React.Component {
         this.state = {
             gameType: GAME_TYPE.GOMOKU,
             boardSize: BOARD_SIZE.BY15,
+            mode: MODE.PVP,
             currentPlayer: SIDE.BLACK,
-            moveNumberDisplay: true,
+            moveNumberDisplay: false,
             clearBoard: false
         }
     }

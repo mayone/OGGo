@@ -36,13 +36,16 @@
     margin: 0.5rem 1rem;
     width: 4rem;
     background: transparent;
-    background-color: red;
+    background-color: grey;
     font-weight: bold;
     color: white;
-    border: 2px solid white;
+    border: 2px solid grey;
+    transition: background 0.3s;
 }
 .clear:hover {
-    animation: bounce 1s;
+    background-color: red;
+    border: 2px solid white;
+    animation: bounce 1.0s;
 }
 
 @keyframes bounce {
@@ -52,13 +55,13 @@
     }
 
     40% {
-        -webkit-transform: translateY(-10px);
-        transform: translateY(-10px);
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
     }
 
     80% {
-        -webkit-transform: translateY(-5px);
-        transform: translateY(-5px);
+        -webkit-transform: translateY(-4px);
+        transform: translateY(-4px);
     }
 }
 

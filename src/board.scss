@@ -2,7 +2,7 @@
     // width: 60vw;
     display: flex;
     flex-wrap: nowrap;
-    background-color: rgb(194, 79, 12);
+    background-color: rgb(238, 143, 55);
 }
 
 .chess {
@@ -13,7 +13,7 @@
     height: 6vmin;
     background-color: orange;
     border: none;
-    color: red;
+    color: transparent;
     padding: 10px;
     padding: 1vmin;
     text-align: center;
@@ -21,6 +21,7 @@
     display: inline-block;
     font-size: 20px;
     font-size: 3vmin;
+    font-weight: bold;
     margin: 1px 1px;
     margin: 0.2vmin 0.2vmin;
     border-radius: 50%;
@@ -29,16 +30,16 @@
 .black {
     background-color: black;
     color: white;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6);
 }
 .white {
     background-color: white;
     color: black;
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6);
 }
 .empty {
     &:hover {
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.6);
     }
     &.light-black:hover {
         background-color: rgba(0, 0, 0, 0.6)
@@ -46,6 +47,14 @@
     &.light-white:hover {
         background-color: rgba(255, 255, 255, 0.6)
     }
+}
+
+.mark {
+    width: 2vmin;
+    height: 2vmin;
+    display: inline-block;
+    background-color: red;
+    border-radius: 50%;
 }
 
 .transparent {background-color: transparent}

@@ -3,7 +3,7 @@ import React from 'react';
 import { LINK, IMAGE } from './type';
 import Game from './game';
 
-import './App.css';
+import './App.scss';
 
 function App() {
     return (
@@ -22,6 +22,7 @@ function App() {
                     rel="noopener noreferrer"
                 >
                     <img
+                        className="img rotate"
                         src={IMAGE.GITHUB}
                         width="32px"
                         height="32px"
