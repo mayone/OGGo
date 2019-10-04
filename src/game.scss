@@ -3,30 +3,25 @@
     border-radius: 30px;
     padding: 0.5rem 0;
     margin: 0.5rem 1rem;
-    width: 4rem;
+    width: 6rem;
     background: transparent;
     background-color: palevioletred;
     font-weight: bold;
     color: white;
     border: 2px solid white;
-}
-
-.toggle {
     transition: all 0.3s ease-out;
-}
-
-.toggle:hover {
-    color: yellow;
-    border-color: yellow;
-    transform: translateY(-5px);
-}
-
-.on {
-    background-color: orchid;
-}
-.off {
-    background-color: grey;
-    border: 2px solid grey;
+    &.on {
+        background-color: orchid;
+    }
+    &.off {
+        background-color: grey;
+        border: 2px solid grey;
+    }
+    &:hover {
+        color: yellow;
+        border-color: yellow;
+        transform: translateY(-5px);
+    }
 }
 
 .clear {
@@ -34,7 +29,7 @@
     border-radius: 30px;
     padding: 0.5rem 0;
     margin: 0.5rem 1rem;
-    width: 4rem;
+    width: 6rem;
     background: transparent;
     background-color: grey;
     font-weight: bold;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Board } from './board';
 import { GAME_TYPE, BOARD_SIZE, MODE, SIDE } from './type';
+import { Board } from './board';
+import GameAudio from './audio';
 import GameResultModal from './modal/gameResultModal'
 
 import './game.scss';
@@ -23,15 +24,6 @@ export default class Game extends React.Component {
             gameResultModelDisplay: false
         }
         this.gameResult = null
-        this.audio = new Audio("/aetheras.wav")
-        this.audio.loop = true
-        this.audio.addEventListener('timeupdate', function () {
-            let buffer = .22
-            if (this.currentTime > this.duration - buffer) {
-                this.currentTime = 0
-                this.play()
-            }
-        }, false)
     }
 
     pass() {
@@ -43,14 +35,6 @@ export default class Game extends React.Component {
             (prevState) => {
                 return {
                     playMusic: !prevState.playMusic
-                }
-            },
-            () => {
-                if (this.state.playMusic) {
-                    this.audio.load()
-                    this.audio.play()
-                } else {
-                    this.audio.pause()
                 }
             }
         )
@@ -144,6 +128,7 @@ export default class Game extends React.Component {
     render() {
         return (
             <div>
+                <GameAudio play={this.state.playMusic} />
                 <div>
                     <button
                         className={this.state.playMusic ? "toggle on" : "toggle off"}

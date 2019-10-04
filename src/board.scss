@@ -1,8 +1,29 @@
+$boardColor: rgb(238, 143, 55);
+
 .row {
     // width: 60vw;
     display: flex;
     flex-wrap: nowrap;
-    background-color: rgb(238, 143, 55);
+    background-color: $boardColor;
+}
+
+.select {
+    display: inline-block;
+    border-radius: 30px;
+    padding: 0.5rem 0;
+    margin: 0.5rem 1rem;
+    width: 4rem;
+    background: transparent;
+    background-color: grey;
+    font-weight: bold;
+    color: white;
+    border: 2px solid grey;
+    transition: all 0.3s;
+    &:hover {
+        background-color: skyblue;
+        border: 2px solid white;
+        transform: translateY(-5px);
+    }
 }
 
 .statistics {

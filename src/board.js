@@ -23,6 +23,7 @@ export class Board extends React.Component {
                 whiteStonesCapcuted: 0
             }
         }
+        this.history = []
         this.endGameCallback = props.endGameCallback
     }
 
@@ -52,6 +53,7 @@ export class Board extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        // const { gameType } = this.props
         if (this.props.gameType !== prevProps.gameType ||
             this.props.boardSize !== prevProps.boardSize) {
             this.clearBoard(this.props)
@@ -87,42 +89,39 @@ export class Board extends React.Component {
         let index = this.getIndex(y, x)
         if (!this.state.gameEnded &&
             !this.state.intersections[index].moveNo) {
+            let newIntersections = null
+            let totalMoves = this.state.totalMoves + 1
+
             if (this.state.gameType === GAME_TYPE.GOMOKU) {
-                let newIntersections = [...this.state.intersections]
-                let currentColor = this.state.currentColor
-                let totalMoves = this.state.totalMoves + 1
+                newIntersections = [...this.state.intersections]
+                totalMoves = this.state.totalMoves + 1
                 newIntersections[index] = {
-                    color: currentColor,
+                    color: this.state.currentColor,
                     moveNo: totalMoves
                 }
+            } else if (this.state.gameType === GAME_TYPE.GO) {
+                newIntersections = this.goGetNewBoard(y, x)
+                totalMoves = this.state.totalMoves + 1
+            }
+
+            if (newIntersections) {
                 this.setState({
                     totalMoves: totalMoves,
                     lastMove: [y, x],
                     intersections: newIntersections,
                     currentColor: OPPOSITE_SIDE(this.state.currentColor)
-                }, () => {
-                    let winningColor = this.gomokuCheckWinner(y, x)
-                    if (winningColor) {
-                        this.setState({
-                            gameEnded: true
-                        })
-                        this.endGameCallback(winningColor)
-                    }
-                })
-            } else if (this.state.gameType === GAME_TYPE.GO) {
-                let newIntersections = this.goGetNewBoard(y, x)
-                // let currentColor = this.state.currentColor
-                let totalMoves = this.state.totalMoves + 1
-                if (newIntersections) {
-                    this.setState({
-                        totalMoves: totalMoves,
-                        lastMove: [y, x],
-                        intersections: newIntersections,
-                        currentColor: OPPOSITE_SIDE(this.state.currentColor)
+                },
+                    () => {
+                        let winningColor = this.gomokuCheckWinner(y, x)
+                        if (winningColor) {
+                            this.setState({
+                                gameEnded: true
+                            })
+                            this.endGameCallback(winningColor)
+                        }
                     })
-                } else {
-                    alert("Illegal move")
-                }
+            } else {
+                alert("Illegal move")
             }
         }
     }
@@ -270,7 +269,7 @@ export class Board extends React.Component {
         let captures = 0
         let aliveList = []
 
-        for (const [, direction] of FOUR_DIRECTIONS.entries()) {
+        for (const direction of FOUR_DIRECTIONS) {
             let neighbor = neighbors[direction]
             if (neighbor) {
                 let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
@@ -305,7 +304,7 @@ export class Board extends React.Component {
 
         checkingList.push(`${y}-${x}`)
 
-        for (const [, direction] of FOUR_DIRECTIONS.entries()) {
+        for (const direction of FOUR_DIRECTIONS) {
             let neighbor = neighbors[direction]
             if (neighbor) {
                 let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
@@ -371,6 +370,23 @@ export class Board extends React.Component {
         return board
     }
 
+    MoveSelect = () => {
+        if (this.state.totalMoves === 0) {
+            return null
+        } else {
+            return (
+                <div>
+                    <button className="select">
+                        {"<<"}
+                    </button>
+                    <button className="select">
+                        {">>"}
+                    </button>
+                </div>
+            )
+        }
+    }
+
     GoStonesCapture = () => {
         if (this.state.gameType !== GAME_TYPE.GO) {
             return null
@@ -402,10 +418,11 @@ export class Board extends React.Component {
 
     render() {
         return (
-            <>
+            <div>
                 <this.BoardDisplay />
                 <this.GoStonesCapture />
-            </>
+                <this.MoveSelect />
+            </div>
         )
     }
 }
