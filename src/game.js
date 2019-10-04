@@ -4,7 +4,7 @@ import { Board } from './board';
 import GameAudio from './audio';
 import GameResultModal from './modal/gameResultModal'
 
-import './game.scss';
+import './styles/game.scss';
 
 export default class Game extends React.Component {
     constructor(props) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import './modal.scss'
+import '../styles/modal.scss'
 
 export default function GameResultModal(props) {
     const { open, gameResult, onConfirm, onClear } = props

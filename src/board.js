@@ -1,7 +1,7 @@
 import React from 'react';
 import { GAME_TYPE, SIDE, OPPOSITE_SIDE, DIRECTION, FOUR_DIRECTIONS } from './type'
 
-import './board.scss';
+import './styles/board.scss';
 
 export class Board extends React.Component {
     constructor(props) {
