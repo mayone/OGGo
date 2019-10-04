@@ -30,6 +30,16 @@ export const SIDE = Object.freeze({
     EMPTY: 'empty'
 })
 
+export const OPPOSITE_SIDE = (side) => {
+    if (side === SIDE.BLACK) {
+        return SIDE.WHITE
+    } else if (side === SIDE.WHITE) {
+        return SIDE.BLACK
+    } else {
+        return null
+    }
+}
+
 export const DIRECTION = Object.freeze({
     TOP: 'top',
     BOTTOM: 'bottom',
@@ -40,3 +50,10 @@ export const DIRECTION = Object.freeze({
     BOTTOM_LEFT: 'bottomLeft',
     BOTTOM_RIGHT: 'bottomRight'
 })
+
+export const FOUR_DIRECTIONS = [
+    DIRECTION.TOP,
+    DIRECTION.BOTTOM,
+    DIRECTION.LEFT,
+    DIRECTION.RIGHT
+]

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GAME_TYPE, SIDE, DIRECTION } from './type'
+import { GAME_TYPE, SIDE, OPPOSITE_SIDE, DIRECTION, FOUR_DIRECTIONS } from './type'
 
 import './board.scss';
 
@@ -211,9 +211,10 @@ export class Board extends React.Component {
             moveNo: this.state.totalMoves + 1
         }
         // Capture
-        if (this.capture(newIntersections, y, x)) {
-
+        if (this.capture(newIntersections, y, x, checkingList)) {
+            return newIntersections
         } else {
+            checkingList = []
             if (this.hasLiberty(newIntersections, y, x, checkingList)) {
                 return newIntersections
             } else {
@@ -223,28 +224,57 @@ export class Board extends React.Component {
         // return null
     }
 
-    capture = (intersections, y, x) => {
-        // let neighbors = this.getNeighbors(y, x)
-        return 0
+    capture = (intersections, y, x, checkingList) => {
+        let selfColor = intersections[this.getIndex(y, x)].color
+        let neighbors = this.getNeighbors(y, x)
+        let captures = 0
+        let aliveList = []
+
+        for (const [, direction] of FOUR_DIRECTIONS.entries()) {
+            let neighbor = neighbors[direction]
+            if (neighbor) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === OPPOSITE_SIDE(selfColor)) {
+                    if (aliveList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
+                        continue
+                    }
+                    if (this.hasLiberty(intersections, neighbor[0], neighbor[1], checkingList)) {
+                        aliveList = aliveList.concat(checkingList)
+                        checkingList = []
+                    } else {
+                        captures += checkingList.length
+                        for (const [, pos] of checkingList.entries()) {
+                            const [y, x] = pos.split('-').map((v, i) => +v)
+                            intersections[this.getIndex(y, x)] = {
+                                color: SIDE.EMPTY,
+                                moveNo: 0
+                            }
+                        }
+                        checkingList = []
+                    }
+                }
+            }
+        }
+
+        return captures
     }
 
     hasLiberty = (intersections, y, x, checkingList) => {
+        let selfColor = intersections[this.getIndex(y, x)].color
         let neighbors = this.getNeighbors(y, x)
 
         checkingList.push(`${y}-${x}`)
 
-        let fourDirection = [DIRECTION.TOP, DIRECTION.BOTTOM, DIRECTION.LEFT, DIRECTION.RIGHT]
-        for (const [, dir] of fourDirection.entries()) {
-            let neighbor = neighbors[dir]
+        for (const [, direction] of FOUR_DIRECTIONS.entries()) {
+            let neighbor = neighbors[direction]
             if (neighbor) {
-                if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`)) {
-                    let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
-                    if (color === SIDE.EMPTY) {
+                let color = intersections[this.getIndex(neighbor[0], neighbor[1])].color
+                if (color === SIDE.EMPTY) {
+                    return true
+                } else if (color === selfColor) {
+                    if (!checkingList.includes(`${neighbor[0]}-${neighbor[1]}`) &&
+                        this.hasLiberty(intersections, neighbor[0], neighbor[1], checkingList)) {
                         return true
-                    } else if (color === this.state.currentColor) {
-                        if (this.hasLiberty(intersections, neighbor[0], neighbor[1], checkingList)) {
-                            return true
-                        }
                     }
                 }
             }
