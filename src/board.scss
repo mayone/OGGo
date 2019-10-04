@@ -5,6 +5,33 @@
     background-color: rgb(238, 143, 55);
 }
 
+.statistics {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px;
+    padding: 5px;
+}
+
+.scoring {
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    color: blanchedalmond;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    background-color: darkgray;
+    border-radius: 6px;
+}
+.black-text-span {
+    color: black;
+}
+.white-text-span {
+    color: white;
+}
+
 .chess {
     width: 50px;
     width: 6vmin;
@@ -50,6 +77,10 @@
         background-color: rgba(255, 255, 255, 0.6)
     }
 }
+.icon {
+    width: 15px;
+    height: 15px;
+}
 
 .mark {
     width: 2vmin;
@@ -58,5 +89,3 @@
     background-color: red;
     border-radius: 50%;
 }
-
-.transparent {background-color: transparent}

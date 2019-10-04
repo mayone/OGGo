@@ -17,7 +17,11 @@ export class Board extends React.Component {
                 moveNo: null
             })],
             currentColor: props.currentSide,
-            gameEnded: false
+            gameEnded: false,
+            goInfo: {
+                blackStonesCaptured: 0,
+                whiteStonesCapcuted: 0
+            }
         }
         this.endGameCallback = props.endGameCallback
     }
@@ -33,7 +37,11 @@ export class Board extends React.Component {
             totalMoves: 0,
             lastMove: null,
             currentColor: props.currentSide,
-            gameEnded: false
+            gameEnded: false,
+            goInfo: {
+                blackStonesCaptured: 0,
+                whiteStonesCapcuted: 0
+            }
         })
     }
 
@@ -66,6 +74,15 @@ export class Board extends React.Component {
         return y * this.state.boardSize + x
     }
 
+    pass = () => {
+        this.setState((prevState) => {
+            return {
+                totalMoves: prevState.totalMoves + 1,
+                currentColor: OPPOSITE_SIDE(this.state.currentColor)
+            }
+        })
+    }
+
     playAt = (y, x) => {
         let index = this.getIndex(y, x)
         if (!this.state.gameEnded &&
@@ -82,7 +99,7 @@ export class Board extends React.Component {
                     totalMoves: totalMoves,
                     lastMove: [y, x],
                     intersections: newIntersections,
-                    currentColor: this.nextColor()
+                    currentColor: OPPOSITE_SIDE(this.state.currentColor)
                 }, () => {
                     let winningColor = this.gomokuCheckWinner(y, x)
                     if (winningColor) {
@@ -101,7 +118,7 @@ export class Board extends React.Component {
                         totalMoves: totalMoves,
                         lastMove: [y, x],
                         intersections: newIntersections,
-                        currentColor: this.nextColor()
+                        currentColor: OPPOSITE_SIDE(this.state.currentColor)
                     })
                 } else {
                     alert("Illegal move")
@@ -206,15 +223,18 @@ export class Board extends React.Component {
     goGetNewBoard = (y, x) => {
         let newIntersections = [...this.state.intersections]
         let checkingList = []
+        let stonesCaptured = 0
         newIntersections[this.getIndex(y, x)] = {
             color: this.state.currentColor,
             moveNo: this.state.totalMoves + 1
         }
         // Capture
-        if (this.capture(newIntersections, y, x, checkingList)) {
+        stonesCaptured = this.capture(newIntersections, y, x, checkingList)
+        if (stonesCaptured) {
+            this.recordStonesCaptured(stonesCaptured)
             return newIntersections
         } else {
-            checkingList = []
+            //checkingList = []
             if (this.hasLiberty(newIntersections, y, x, checkingList)) {
                 return newIntersections
             } else {
@@ -222,6 +242,26 @@ export class Board extends React.Component {
             }
         }
         // return null
+    }
+
+    recordStonesCaptured = (stonesCaptured) => {
+        this.setState((prevState) => {
+            if (this.state.currentColor === SIDE.BLACK) {
+                return {
+                    goInfo: {
+                        whiteStonesCapcuted: prevState.goInfo.whiteStonesCapcuted + stonesCaptured,
+                        blackStonesCaptured: prevState.goInfo.blackStonesCaptured
+                    }
+                }
+            } else if (this.state.currentColor === SIDE.WHITE) {
+                return {
+                    goInfo: {
+                        whiteStonesCapcuted: prevState.goInfo.whiteStonesCapcuted,
+                        blackStonesCaptured: prevState.goInfo.blackStonesCaptured + stonesCaptured
+                    }
+                }
+            }
+        })
     }
 
     capture = (intersections, y, x, checkingList) => {
@@ -283,14 +323,6 @@ export class Board extends React.Component {
         return false
     }
 
-    nextColor() {
-        if (this.state.currentColor === SIDE.BLACK) {
-            return SIDE.WHITE
-        } else {
-            return SIDE.BLACK
-        }
-    }
-
     Intersection = (props) => {
         const { rowId, colId, onClick, color, moveNo } = props
         let chessInfo = this.state.moveNumberDisplay ?
@@ -330,16 +362,50 @@ export class Board extends React.Component {
         return row
     }
 
-    render() {
-        let rows = []
-        for (let rowId = 0; rowId < this.state.boardSize; rowId++) {
-            rows.push(
-                <div className="row" key={rowId}>
-                    <this.Row rowId={rowId} />
+    BoardDisplay = () => {
+        let board = [...Array(this.state.boardSize)].map((_, rowId) =>
+            <div className="row" key={rowId}>
+                <this.Row rowId={rowId} />
+            </div>)
+
+        return board
+    }
+
+    GoStonesCapture = () => {
+        if (this.state.gameType !== GAME_TYPE.GO) {
+            return null
+        } else {
+            return (
+                <div className="statistics">
+                    <span className="scoring">
+                        <span className="black-text-span">
+                            Black
+                        </span>
+                        <span>
+                            {`${this.state.goInfo.whiteStonesCapcuted}`}
+                        </span>
+                        <button className="chess white icon"></button>
+                    </span>
+                    <span className="scoring">
+                        <span className="white-text-span">
+                            White
+                        </span>
+                        <span>
+                            {`${this.state.goInfo.blackStonesCaptured}`}
+                        </span>
+                        <button className="chess black icon"></button>
+                    </span>
                 </div>
             )
         }
+    }
 
-        return rows
+    render() {
+        return (
+            <>
+                <this.BoardDisplay />
+                <this.GoStonesCapture />
+            </>
+        )
     }
 }

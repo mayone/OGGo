@@ -26,7 +26,7 @@ export default class Game extends React.Component {
         this.audio = new Audio("/aetheras.wav")
         this.audio.loop = true
         this.audio.addEventListener('timeupdate', function () {
-            let buffer = .1
+            let buffer = .22
             if (this.currentTime > this.duration - buffer) {
                 this.currentTime = 0
                 this.play()
