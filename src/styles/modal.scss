@@ -1,3 +1,5 @@
+@import './base/animation';
+
 .modal {
     display: block;
     position: fixed;
@@ -19,14 +21,9 @@
     border-radius: 10px;
     width: 30%;
     background-color: #e2bf7e;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    animation-name: animatetop;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    animation-name: dropin;
     animation-duration: 0.4s
-}
-
-@keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
 }
 
 .modal-header {
@@ -77,7 +74,6 @@
     padding: 0.5rem 0;
     margin: 0.5rem 1rem;
     width: 4rem;
-    background: transparent;
     background-color: grey;
     font-weight: bold;
     color: white;
@@ -96,7 +92,6 @@
     padding: 0.5rem 0;
     margin: 0.5rem 1rem;
     width: 4rem;
-    background: transparent;
     background-color: grey;
     font-weight: bold;
     color: white;

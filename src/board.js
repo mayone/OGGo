@@ -292,7 +292,7 @@ export class Board extends React.Component {
                             const [y, x] = pos.split('-').map((v, i) => +v)
                             intersections[this.getIndex(y, x)] = {
                                 color: SIDE.EMPTY,
-                                moveNo: 0
+                                moveNo: null
                             }
                         }
                         checkingList = []
@@ -337,10 +337,6 @@ export class Board extends React.Component {
                 <div className="mark"></div> :
                 null
 
-        if (this.state.lastMove === [rowId, colId]) {
-            console.log(rowId, colId)
-        }
-
         return (
             <button
                 className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : ""}`}
@@ -368,12 +364,16 @@ export class Board extends React.Component {
     }
 
     BoardDisplay = () => {
-        let board = [...Array(this.state.boardSize)].map((_, rowId) =>
+        let rows = [...Array(this.state.boardSize)].map((_, rowId) =>
             <div className="row" key={rowId}>
                 <this.Row rowId={rowId} />
             </div>)
 
-        return board
+        return (
+            <div className="board">
+                {rows}
+            </div>
+        )
     }
 
     MoveSelect = () => {
@@ -406,7 +406,7 @@ export class Board extends React.Component {
                         <span>
                             {`${this.state.goInfo.whiteStonesCapcuted}`}
                         </span>
-                        <button className="chess white icon"></button>
+                        <span className="chess white icon"></span>
                     </span>
                     <span className="scoring">
                         <span className="white-text-span">
@@ -415,7 +415,7 @@ export class Board extends React.Component {
                         <span>
                             {`${this.state.goInfo.blackStonesCaptured}`}
                         </span>
-                        <button className="chess black icon"></button>
+                        <span className="chess black icon"></span>
                     </span>
                 </div>
             )

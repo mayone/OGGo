@@ -1,11 +1,92 @@
 $boardColor: rgb(238, 143, 55);
 $chessShadow: rgba(0, 0, 0, 0.6);
 
+.board {
+    width: 45vw;
+    height: 45vw;
+    background-color: $boardColor;
+    padding: 6vmin;
+}
+
 .row {
-    // width: 60vw;
+    width: 100%;
+    overflow: hidden;
     display: flex;
     flex-wrap: nowrap;
-    background-color: $boardColor;
+}
+
+.chess {
+    position: relative;
+    // width: 50px;
+    // width: 6vmin;
+    width: 100%;
+    // height: 50px;
+    // height: 6vmin;
+    background-color: orange;
+    border: none;
+    color: transparent;
+    padding: 10px;
+    padding: 1vw;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    // align-content: center;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    // font-size: 20px;
+    font-size: 2vw;
+    // font-size: 0.5em;
+    font-weight: bold;
+    margin: 1px 1px;
+    margin: 0.2vmin 0.2vmin;
+    border-radius: 50%;
+    transition: all 0.2s;
+    &:before {
+        content: "";
+        float: left;
+        padding-top: 100%;
+    }
+}
+.black {
+    background-color: black;
+    color: white;
+    box-shadow: 0px 2px 2px $chessShadow;
+}
+.white {
+    background-color: white;
+    color: black;
+    box-shadow: 0px 2px 2px $chessShadow;
+}
+.empty {
+    &:hover {
+        box-shadow: 0px 2px 2px $chessShadow;
+    }
+    &.light-black:hover {
+        background-color: rgba(0, 0, 0, 0.6)
+    }
+    &.light-white:hover {
+        background-color: rgba(255, 255, 255, 0.6)
+    }
+}
+.icon {
+    width: 2vh;
+    height: 2vh;
+}
+
+.mark {
+    // flex-grow: 1;
+    // width: 2vmin;
+    width: 36%;
+    // height: 2vmin;
+    height: 36%;
+    background-color: red;
+    border-radius: 50%;
+    &:before {
+        content: "";
+        float: left;
+        padding-top: 100%;
+    }
 }
 
 .select {
@@ -14,7 +95,6 @@ $chessShadow: rgba(0, 0, 0, 0.6);
     padding: 0.5rem 0;
     margin: 0.5rem 1rem;
     width: 4rem;
-    background: transparent;
     background-color: grey;
     font-weight: bold;
     color: white;
@@ -52,62 +132,4 @@ $chessShadow: rgba(0, 0, 0, 0.6);
 }
 .white-text-span {
     color: white;
-}
-
-.chess {
-    width: 50px;
-    width: 6vmin;
-    // width: 100%;
-    height: 50px;
-    height: 6vmin;
-    background-color: orange;
-    border: none;
-    color: transparent;
-    padding: 10px;
-    padding: 1vmin;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 20px;
-    font-size: 3vmin;
-    font-weight: bold;
-    margin: 1px 1px;
-    margin: 0.2vmin 0.2vmin;
-    border-radius: 50%;
-    transition: all 0.2s;
-}
-.black {
-    background-color: black;
-    color: white;
-    box-shadow: 0px 2px 2px $chessShadow;
-}
-.white {
-    background-color: white;
-    color: black;
-    box-shadow: 0px 2px 2px $chessShadow;
-}
-.empty {
-    &:hover {
-        box-shadow: 0px 2px 2px $chessShadow;
-    }
-    &.light-black:hover {
-        background-color: rgba(0, 0, 0, 0.6)
-    }
-    &.light-white:hover {
-        background-color: rgba(255, 255, 255, 0.6)
-    }
-}
-.icon {
-    width: 15px;
-    height: 15px;
-}
-
-.mark {
-    width: 2vmin;
-    height: 2vmin;
-    display: inline-block;
-    background-color: red;
-    border-radius: 50%;
 }
