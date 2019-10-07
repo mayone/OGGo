@@ -52,6 +52,12 @@ export class Board extends React.Component {
         })
     }
 
+    // static getDerivedStateFromProps(props, state) {
+    //     console.log("props updated")
+
+    //     return null
+    // }
+
     componentDidUpdate(prevProps) {
         // const { gameType } = this.props
         if (this.props.gameType !== prevProps.gameType ||

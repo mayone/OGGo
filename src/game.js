@@ -45,9 +45,11 @@ export default class Game extends React.Component {
             return
         }
 
-        let boardSize = BOARD_SIZE.BY9
+        let boardSize = 0
         if (gameType === GAME_TYPE.GOMOKU) {
             boardSize = BOARD_SIZE.BY15
+        } else if (gameType === GAME_TYPE.GO) {
+            boardSize = BOARD_SIZE.BY9
         }
 
         this.setState({

@@ -1,0 +1,33 @@
+@keyframes bounce {
+    0%, 20%, 60%, 100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+    }
+
+    80% {
+        -webkit-transform: translateY(-4px);
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes squeeze {
+    0%, 20%, 60%, 100% {
+        -webkit-transform: skew(0);
+        transform: skew(0);
+    }
+
+    40% {
+        -webkit-transform: skew(-10deg);
+        transform: skew(-10deg);
+    }
+
+    80% {
+        -webkit-transform: skew(10deg);
+        transform: skew(10deg);
+    }
+}

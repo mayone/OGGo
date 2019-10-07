@@ -6,6 +6,10 @@ export const IMAGE = Object.freeze({
     GITHUB: '/GitHub-Mark-Light-64px.png'
 })
 
+export const AUDIO = Object.freeze({
+    AETHERAS: '/aetheras.wav'
+})
+
 export const GAME_TYPE = Object.freeze({
     GO: 'go',
     GOMOKU: 'gomoku'

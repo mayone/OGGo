@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { AUDIO } from './type';
 
 export default function GameAudio(props) {
     const { play } = props
 
     const initAudio = () => {
-        let audio = new Audio("/aetheras.wav")
+        let audio = new Audio(AUDIO.AETHERAS)
         audio.loop = true
+        // Remove gap between replay
         audio.addEventListener('timeupdate', function () {
             let buffer = .22
             if (this.currentTime > this.duration - buffer) {
@@ -20,7 +22,6 @@ export default function GameAudio(props) {
     const [audio] = useState(initAudio())
 
     useEffect(() => {
-        console.log("state change to", play)
         if (play) {
             audio.load()
             audio.play()
