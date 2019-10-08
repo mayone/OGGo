@@ -1,5 +1,5 @@
 import React from 'react';
-import { GAME_TYPE, SIDE, OPPOSITE_SIDE, DIRECTION, FOUR_DIRECTIONS } from './type'
+import { GAME_TYPE, STAR_POINTS, SIDE, OPPOSITE_SIDE, DIRECTION, FOUR_DIRECTIONS } from './type'
 
 import './styles/board.scss';
 
@@ -23,6 +23,7 @@ export class Board extends React.Component {
                 whiteStonesCapcuted: 0
             }
         }
+        this.canvasRef = React.createRef()
         this.history = []
         this.endGameCallback = props.endGameCallback
     }
@@ -43,13 +44,88 @@ export class Board extends React.Component {
                 blackStonesCaptured: 0,
                 whiteStonesCapcuted: 0
             }
+        }, () => {
+            this.canvasDrawBoard()
         })
+
     }
 
     moveNumberDisplayChange = (moveNumberDisplay) => {
         this.setState({
             moveNumberDisplay: moveNumberDisplay
         })
+    }
+
+    canvasDrawBoard = () => {
+        const canvas = this.canvasRef.current
+        // console.log(canvas.width)
+        // console.log(canvas.height)
+        // console.log(canvas.scrollWidth)
+        // console.log(canvas.scrollHeight)
+
+        if (canvas) {
+            const ctx = canvas.getContext('2d')
+            const canvasWidth = canvas.scrollWidth
+            const chessDiameter = canvasWidth / this.state.boardSize
+            const chessRadius = chessDiameter / 2
+            const startingPos = [chessRadius, chessRadius]
+            const starPointRadius = canvasWidth / 10 / this.state.boardSize
+
+            ctx.canvas.width = canvasWidth
+            ctx.canvas.height = canvasWidth
+            // ctx.strokeStyle = "#361c01"
+            ctx.strokeStyle = "black"
+            ctx.lineWidth = canvasWidth / 20 / this.state.boardSize
+
+            // By drawing rectangles
+            // for (let y = 0; y < this.state.boardSize - 1; y++) {
+            //     for (let x = 0; x < this.state.boardSize - 1; x++) {
+            //         ctx.beginPath()
+            //         ctx.strokeRect(
+            //             startingPos[1] + x * chessDiameter,
+            //             startingPos[0] + y * chessDiameter,
+            //             chessDiameter,
+            //             chessDiameter)
+            //     }
+            // }
+
+            // By drawing lines
+            for (let i = 0; i < this.state.boardSize; i++) {
+                ctx.beginPath()
+                ctx.moveTo(startingPos[1] + i * chessDiameter, startingPos[0])
+                ctx.lineTo(
+                    startingPos[1] + i * chessDiameter,
+                    startingPos[0] + (this.state.boardSize - 1) * chessDiameter)
+                ctx.stroke()
+            }
+            for (let i = 0; i < this.state.boardSize; i++) {
+                ctx.beginPath()
+                ctx.moveTo(startingPos[1], startingPos[0] + i * chessDiameter)
+                ctx.lineTo(
+                    startingPos[1] + (this.state.boardSize - 1) * chessDiameter,
+                    startingPos[0] + i * chessDiameter)
+                ctx.stroke()
+            }
+
+            // Draw star points
+            const starPoints = STAR_POINTS(this.state.boardSize)
+            for (let key in starPoints) {
+                let starPoint = starPoints[key]
+                ctx.beginPath()
+                ctx.arc(
+                    startingPos[1] + starPoint.x * chessDiameter,
+                    startingPos[0] + starPoint.y * chessDiameter,
+                    starPointRadius,
+                    0,
+                    2 * Math.PI
+                )
+                ctx.fill();
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.canvasDrawBoard()
     }
 
     // static getDerivedStateFromProps(props, state) {
@@ -363,7 +439,7 @@ export class Board extends React.Component {
         return row
     }
 
-    BoardDisplay = () => {
+    BoardDisplay = React.forwardRef((props, ref) => {
         let rows = [...Array(this.state.boardSize)].map((_, rowId) =>
             <div className="row" key={rowId}>
                 <this.Row rowId={rowId} />
@@ -371,10 +447,18 @@ export class Board extends React.Component {
 
         return (
             <div className="board">
-                {rows}
+                <div className="board-content">
+                    <div className="rows">
+                        {rows}
+                    </div>
+                    <canvas
+                        ref={ref}
+                        className="canvas">
+                    </canvas>
+                </div>
             </div>
         )
-    }
+    })
 
     MoveSelect = () => {
         if (this.state.totalMoves === 0) {
@@ -425,7 +509,7 @@ export class Board extends React.Component {
     render() {
         return (
             <div>
-                <this.BoardDisplay />
+                <this.BoardDisplay ref={this.canvasRef} />
                 <this.GoStonesCapture />
                 <this.MoveSelect />
             </div>

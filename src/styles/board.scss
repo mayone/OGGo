@@ -1,47 +1,64 @@
-$boardColor: rgb(238, 143, 55);
+$boardColor: rgb(253, 193, 103);
 $chessShadow: rgba(0, 0, 0, 0.6);
 
 .board {
     width: 45vw;
     height: 45vw;
-    background-color: $boardColor;
     padding: 6vmin;
+    background-color: $boardColor;
+}
+
+.board-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.rows {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .row {
-    width: 100%;
-    overflow: hidden;
     display: flex;
     flex-wrap: nowrap;
+    width: 100%;
+    overflow: hidden;
+    background-color: transparent;
 }
 
 .chess {
-    position: relative;
+    display: flex;
     // width: 50px;
     // width: 6vmin;
     width: 100%;
-    // height: 50px;
-    // height: 6vmin;
-    background-color: orange;
+    background-color: transparent;
     border: none;
     color: transparent;
-    padding: 10px;
-    padding: 1vw;
     padding: 0;
     justify-content: center;
     align-items: center;
     // align-content: center;
     text-align: center;
     text-decoration: none;
-    display: flex;
     // font-size: 20px;
     font-size: 2vw;
     // font-size: 0.5em;
     font-weight: bold;
-    margin: 1px 1px;
     margin: 0.2vmin 0.2vmin;
+    margin: 0.3% 0.3%;
     border-radius: 50%;
-    transition: all 0.2s;
+    transition: all 0.3s;
     &:before {
         content: "";
         float: left;

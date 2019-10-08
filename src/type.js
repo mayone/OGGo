@@ -22,6 +22,31 @@ export const BOARD_SIZE = Object.freeze({
     BY19: 19
 })
 
+export const STAR_POINTS = (boardSize) => {
+    const offset = boardSize > 11 ? 3 : 2
+    if (boardSize > 13) {
+        return {
+            topLeft: { y: offset, x: offset },
+            topRight: { y: offset, x: boardSize - 1 - offset },
+            bottonLeft: { y: boardSize - 1 - offset, x: offset },
+            bottonRight: { y: boardSize - 1 - offset, x: boardSize - 1 - offset },
+            center: { y: (boardSize + 1) / 2 - 1, x: (boardSize + 1) / 2 - 1 },
+            top: { y: offset, x: (boardSize + 1) / 2 - 1 },
+            bottom: { y: boardSize - 1 - offset, x: (boardSize + 1) / 2 - 1 },
+            left: { y: (boardSize + 1) / 2 - 1, x: offset },
+            right: { y: (boardSize + 1) / 2 - 1, x: boardSize - 1 - offset }
+        }
+    } else {
+        return {
+            topLeft: { y: offset, x: offset },
+            topRight: { y: offset, x: boardSize - 1 - offset },
+            bottonLeft: { y: boardSize - 1 - offset, x: offset },
+            bottonRight: { y: boardSize - 1 - offset, x: boardSize - 1 - offset },
+            center: { y: (boardSize + 1) / 2 - 1, x: (boardSize + 1) / 2 - 1 }
+        }
+    }
+}
+
 export const MODE = Object.freeze({
     PVP: 0,
     VS_AI: 1,
