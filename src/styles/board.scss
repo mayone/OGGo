@@ -33,7 +33,7 @@ $chessShadow: rgba(0, 0, 0, 0.6);
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     background-color: transparent;
 }
 
@@ -68,16 +68,16 @@ $chessShadow: rgba(0, 0, 0, 0.6);
 .black {
     background-color: black;
     color: white;
-    box-shadow: 0px 2px 2px $chessShadow;
+    box-shadow: 2px 2px 2px $chessShadow;
 }
 .white {
     background-color: white;
     color: black;
-    box-shadow: 0px 2px 2px $chessShadow;
+    box-shadow: 2px 2px 2px $chessShadow;
 }
 .empty {
     &:hover {
-        box-shadow: 0px 2px 2px $chessShadow;
+        box-shadow: 2px 2px 2px $chessShadow;
     }
     &.light-black:hover {
         background-color: rgba(0, 0, 0, 0.6)
