@@ -28,6 +28,10 @@ export class Board extends React.Component {
         this.endGameCallback = props.endGameCallback
     }
 
+    windowResized = () => {
+        this.canvasDrawBoard()
+    }
+
     clearBoard = (props) => {
         this.setState({
             gameType: props.gameType,
@@ -125,7 +129,12 @@ export class Board extends React.Component {
     }
 
     componentDidMount() {
+        window.addEventListener("resize", this.windowResized)
         this.canvasDrawBoard()
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.canvasDrawBoard)
     }
 
     // static getDerivedStateFromProps(props, state) {
