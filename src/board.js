@@ -3,26 +3,30 @@ import { GAME_TYPE, STAR_POINTS, SIDE, OPPOSITE_SIDE, DIRECTION, FOUR_DIRECTIONS
 
 import './styles/board.scss';
 
+const initState = (props) => {
+    return {
+        gameType: props.gameType,
+        boardSize: props.boardSize,
+        moveNumberDisplay: props.moveNumberDisplay,
+        totalMoves: 0,
+        lastMove: null,
+        intersections: [...Array(props.boardSize * props.boardSize).fill({
+            color: SIDE.EMPTY,
+            moveNo: null
+        })],
+        currentColor: props.currentSide,
+        gameEnded: false,
+        goInfo: {
+            blackStonesCaptured: 0,
+            whiteStonesCapcuted: 0
+        }
+    }
+}
+
 export class Board extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            gameType: props.gameType,
-            boardSize: props.boardSize,
-            moveNumberDisplay: props.moveNumberDisplay,
-            totalMoves: 0,
-            lastMove: null,
-            intersections: [...Array(props.boardSize * props.boardSize).fill({
-                color: SIDE.EMPTY,
-                moveNo: null
-            })],
-            currentColor: props.currentSide,
-            gameEnded: false,
-            goInfo: {
-                blackStonesCaptured: 0,
-                whiteStonesCapcuted: 0
-            }
-        }
+        this.state = initState(props)
         this.canvasRef = React.createRef()
         this.history = []
         this.endGameCallback = props.endGameCallback
@@ -33,25 +37,12 @@ export class Board extends React.Component {
     }
 
     clearBoard = (props) => {
-        this.setState({
-            gameType: props.gameType,
-            boardSize: props.boardSize,
-            intersections: [...Array(props.boardSize * props.boardSize).fill({
-                color: SIDE.EMPTY,
-                moveNo: null
-            })],
-            totalMoves: 0,
-            lastMove: null,
-            currentColor: props.currentSide,
-            gameEnded: false,
-            goInfo: {
-                blackStonesCaptured: 0,
-                whiteStonesCapcuted: 0
+        this.setState(
+            initState(props),
+            () => {
+                this.canvasDrawBoard()
             }
-        }, () => {
-            this.canvasDrawBoard()
-        })
-
+        )
     }
 
     moveNumberDisplayChange = (moveNumberDisplay) => {
@@ -129,16 +120,29 @@ export class Board extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener("resize", this.windowResized)
+        window.addEventListener('resize', this.windowResized)
         this.canvasDrawBoard()
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.canvasDrawBoard)
+        window.removeEventListener('resize', this.windowResized)
     }
 
-    // static getDerivedStateFromProps(props, state) {
-    //     console.log("props updated")
+    // static getDerivedStateFromProps(nextProps, prevState) {
+    //     console.log("nextProps updated")
+    //     console.log(prevState.gameType)
+    //     console.log(nextProps.gameType)
+    //     if (nextProps.gameType !== prevState.gameType ||
+    //         nextProps.boardSize !== prevState.boardSize) {
+    //         this.clearBoard(nextProps)
+    //     }
+    //     if (nextProps.moveNumberDisplay !== prevState.moveNumberDisplay) {
+    //         this.moveNumberDisplayChange(nextProps.moveNumberDisplay)
+    //     }
+    //     if (nextProps.clearBoard &&
+    //         nextProps.clearBoard !== prevState.clearBoard) {
+    //         this.clearBoard(nextProps)
+    //     }
 
     //     return null
     // }
