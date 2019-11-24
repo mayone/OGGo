@@ -448,11 +448,10 @@ export class Board extends React.Component {
                 <div className="mark"></div> :
                 null
 
-        const hoverStyle = color === SIDE.EMPTY ?
+        const hoverStyle = color === SIDE.EMPTY &&
             (this.state.gameType !== GAME_TYPE.GO || this.isMoveLegal(rowId, colId) ?
                 ('light-' + this.state.currentColor) :
-                "") :
-            ""
+                "")
 
         return (
             <button
