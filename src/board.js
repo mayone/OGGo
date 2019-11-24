@@ -314,6 +314,28 @@ export class Board extends React.Component {
         return null
     }
 
+    isMoveLegal = (y, x) => {
+        let newIntersections = [...this.state.intersections]
+        let checkingList = []
+        let stonesCaptured = 0
+        newIntersections[this.getIndex(y, x)] = {
+            color: this.state.currentColor,
+            moveNo: this.state.totalMoves + 1
+        }
+        // Capture
+        stonesCaptured = this.capture(newIntersections, y, x, checkingList)
+        if (stonesCaptured) {
+            return true
+        } else {
+            //checkingList = []
+            if (this.hasLiberty(newIntersections, y, x, checkingList)) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+
     goGetNewBoard = (y, x) => {
         let newIntersections = [...this.state.intersections]
         let checkingList = []
@@ -426,9 +448,15 @@ export class Board extends React.Component {
                 <div className="mark"></div> :
                 null
 
+        const hoverStyle = color === SIDE.EMPTY ?
+            (this.state.gameType !== GAME_TYPE.GO || this.isMoveLegal(rowId, colId) ?
+                ('light-' + this.state.currentColor) :
+                "") :
+            ""
+
         return (
             <button
-                className={`chess ${color} ${color === SIDE.EMPTY ? ('light-' + this.state.currentColor) : ""}`}
+                className={`chess ${color} ${hoverStyle}`}
                 onClick={onClick}
             >
                 {chessInfo}

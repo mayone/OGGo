@@ -1,4 +1,5 @@
 @import './base/animation';
+@import './base/typography';
 
 .toggle {
     display: inline-block;
@@ -9,6 +10,7 @@
     background: transparent;
     background-color: palevioletred;
     font-weight: bold;
+    // font-family: 'Open Sans';
     color: white;
     border: 2px solid white;
     transition: all 0.3s ease-out;
