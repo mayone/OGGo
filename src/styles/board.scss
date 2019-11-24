@@ -64,6 +64,9 @@ $chessShadow: rgba(0, 0, 0, 0.6);
         float: left;
         padding-top: 100%;
     }
+    &:focus {
+        outline: none !important;
+    }
 }
 .black {
     background-color: black;
