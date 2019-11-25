@@ -71,6 +71,7 @@ export class Board extends React.Component {
             // ctx.strokeStyle = "#361c01"
             ctx.strokeStyle = "black"
             ctx.lineWidth = canvasWidth / 20 / this.state.boardSize
+            const halfLineWidth = ctx.lineWidth / 2
 
             // By drawing rectangles
             // for (let y = 0; y < this.state.boardSize - 1; y++) {
@@ -87,10 +88,17 @@ export class Board extends React.Component {
             // By drawing lines
             for (let i = 0; i < this.state.boardSize; i++) {
                 ctx.beginPath()
-                ctx.moveTo(startingPos[1] + i * chessDiameter, startingPos[0])
-                ctx.lineTo(
-                    startingPos[1] + i * chessDiameter,
-                    startingPos[0] + (this.state.boardSize - 1) * chessDiameter)
+                if (i === 0 || i === this.state.boardSize - 1) {
+                    ctx.moveTo(startingPos[1] + i * chessDiameter, startingPos[0] - halfLineWidth)
+                    ctx.lineTo(
+                        startingPos[1] + i * chessDiameter,
+                        startingPos[0] + (this.state.boardSize - 1) * chessDiameter + halfLineWidth)
+                } else {
+                    ctx.moveTo(startingPos[1] + i * chessDiameter, startingPos[0])
+                    ctx.lineTo(
+                        startingPos[1] + i * chessDiameter,
+                        startingPos[0] + (this.state.boardSize - 1) * chessDiameter)
+                }
                 ctx.stroke()
             }
             for (let i = 0; i < this.state.boardSize; i++) {
