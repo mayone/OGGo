@@ -3,6 +3,9 @@ import { GAME_TYPE, BOARD_SIZE, MODE, SIDE } from './type';
 import { Board } from './board';
 import GameAudio from './audio';
 import GameResultModal from './modal/gameResultModal'
+import { Widget, toggleWidget } from 'react-chat-widget';
+
+import 'react-chat-widget/lib/styles.css';
 
 import './styles/game.scss';
 
@@ -178,6 +181,8 @@ export default class Game extends React.Component {
                 >
                     Clear
                 </button>
+                <button onClick={() => toggleWidget()}> Open Chat</button>
+                <Widget />
             </div>
         )
     }
